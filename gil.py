@@ -72,6 +72,7 @@ def gillespie(maxTime):
 
 
 fig, axs = plt.subplots(5)
+fig.set_size_inches(20, 15)
 titles = ["Free genes over time", "RNA transcripts over time", "Proteins over time", "Repressed genes over time", "Dimerized proteins over time"]
 for i in range(0, 11):
     sim =  gillespie(100)
