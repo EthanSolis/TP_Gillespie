@@ -25,13 +25,16 @@ def gilStep(matrix, react, prop, t):
     x2 = uniform(0,1)
     nextReact = 0
 
-    #too lazy to do it properly lmao
-    while(True):
-        if nextReact == len(prop)-1 or (otherSum + prop[nextReact]) > x2*propSum:
+    for n in prop:
+        if (otherSum + n) > x2*propSum and nextReact < 8:
             break
         else:
             nextReact += 1
+
+    if nextReact == 8:
+        return([react, t+tau])
     newReact = np.add(react, matrix[nextReact])
+    #reactants cant be below 0
     newReact = np.array([n if n > 0 else 0 for n in newReact])
     newTime = t+tau
 
@@ -57,7 +60,6 @@ def gillespie(maxTime):
     times = [t]
     reactsOverTime = [react]
     while(t < maxTime):
-        print(react)
         prop = propensity(react, rates)
         nextStep = gilStep(speciesMat, react, prop, t)
 
@@ -69,7 +71,13 @@ def gillespie(maxTime):
     return([times, reactsOverTime])
 
 
-poopoohead =  gillespie(500)
-
-plt.plot(poopoohead[0], poopoohead[1][2])
+fig, axs = plt.subplots(5)
+titles = ["Free genes over time", "RNA transcripts over time", "Proteins over time", "Repressed genes over time", "Dimerized proteins over time"]
+for i in range(0, 11):
+    sim =  gillespie(100)
+    x = sim[0]
+    y = sim[1]
+    for j in range(0,5):
+        axs[j].plot(x, y[j])
+        axs[j].set_title(titles[j])
 plt.show()
